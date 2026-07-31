@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Samantha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Dancing+Script:wght@500;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream: #FBF3EC;
+    --blush: #F4D4D9;
+    --rose: #B5495B;
+    --plum: #3E2430;
+    --gold: #C6952F;
+    --gold-light: #E8CD8A;
+    --paper: #FFFDF9;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background: linear-gradient(180deg, var(--cream) 0%, #F8E8E0 40%, var(--cream) 100%);
+    color: var(--plum);
+    font-family: 'Lora', serif;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  h1, h2, h3, .display{
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .script{
+    font-family: 'Dancing Script', cursive;
+    color: var(--rose);
+  }
+
+  a{color: inherit;}
+
+  /* ---------- Floating petals ---------- */
+  #petal-field{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+  }
+  .petal{
+    position: absolute;
+    top: -5%;
+    width: 14px;
+    height: 14px;
+    background: radial-gradient(circle at 30% 30%, var(--gold-light), var(--rose));
+    border-radius: 0% 60% 0% 60%;
+    opacity: 0.75;
+    animation: fall linear infinite;
+  }
+  @keyframes fall{
+    to{ transform: translateY(110vh) rotate(300deg); }
+  }
+
+  /* ---------- Envelope hero ---------- */
+  .hero{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .eyebrow{
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: var(--rose);
+    font-family: 'Lora', serif;
+    margin-bottom: 28px;
+  }
+
+  .envelope-wrap{
+    width: min(360px, 80vw);
+    aspect-ratio: 3 / 2;
+    position: relative;
+    cursor: pointer;
+    perspective: 1000px;
+  }
+
+  .envelope-body{
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, var(--paper), #F3E4D8);
+    border: 1px solid var(--gold-light);
+    border-radius: 4px;
+    box-shadow: 0 20px 50px -20px rgba(62,36,48,0.35);
+  }
+
+  .envelope-flap{
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 55%;
+    background: linear-gradient(160deg, #F6E7DB, var(--blush));
+    clip-path: polygon(0 0, 100% 0, 50% 90%);
+    transform-origin: top;
+    transition: transform 1.1s cubic-bezier(.6,.1,.2,1);
+    border-radius: 4px 4px 0 0;
+    z-index: 3;
+  }
+
+  .envelope-wrap.open .envelope-flap{
+    transform: rotateX(180deg);
+  }
+
+  .seal{
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #D9AE55, var(--rose) 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Dancing Script', cursive;
+    color: #FBF3EC;
+    font-size: 1.5rem;
+    box-shadow: 0 6px 16px rgba(62,36,48,0.4);
+    z-index: 4;
+    transition: opacity 0.4s ease, transform 0.6s ease;
+  }
+
+  .envelope-wrap.open .seal{
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+
+  .letter-peek{
+    position: absolute;
+    left: 6%;
+    right: 6%;
+    bottom: -6%;
+    height: 90%;
+    background: var(--paper);
+    border-radius: 3px;
+    box-shadow: 0 10px 30px rgba(62,36,48,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10%;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--rose);
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    transition: transform 1s cubic-bezier(.6,.1,.2,1) 0.15s;
+    transform: translateY(6%);
+    z-index: 1;
+  }
+
+  .envelope-wrap.open .letter-peek{
+    transform: translateY(-38%);
+  }
+
+  .hero-hint{
+    margin-top: 34px;
+    font-size: 0.85rem;
+    color: var(--plum);
+    opacity: 0.55;
+    letter-spacing: 0.05em;
+  }
+
+  .scroll-cue{
+    position: absolute;
+    bottom: 34px;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    animation: bob 2.4s ease-in-out infinite;
+  }
+  @keyframes bob{
+    0%, 100%{ transform: translateY(0); }
+    50%{ transform: translateY(8px); }
+  }
+
+  /* ---------- Sections ---------- */
+  section{
+    position: relative;
+    z-index: 2;
+    padding: 110px 24px;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .section-label{
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-size: 0.72rem;
+    color: var(--rose);
+    margin-bottom: 14px;
+  }
+
+  .section-title{
+    text-align: center;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    margin-bottom: 50px;
+  }
+
+  .divider{
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0 auto 50px;
+    opacity: 0.6;
+  }
+
+  /* ---------- Letter ---------- */
+  .letter-card{
+    background: var(--paper);
+    border: 1px solid var(--gold-light);
+    border-radius: 6px;
+    padding: clamp(30px, 6vw, 64px);
+    box-shadow: 0 30px 60px -30px rgba(62,36,48,0.25);
+    position: relative;
+  }
+  .letter-card::before{
+    content: "";
+    position: absolute;
+    top: 14px; left: 14px; right: 14px; bottom: 14px;
+    border: 1px solid var(--blush);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+  .letter-body{
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: var(--plum);
+  }
+  .letter-body p{ margin-bottom: 22px; }
+  .letter-signoff{
+    font-family: 'Dancing Script', cursive;
+    font-size: 2rem;
+    color: var(--rose);
+    text-align: right;
+    margin-top: 20px;
+  }
+  .editable-note{
+    display: inline-block;
+    margin-top: 26px;
+    font-family: 'Lora', serif;
+    font-size: 0.75rem;
+    color: var(--rose);
+    background: var(--blush);
+    padding: 6px 14px;
+    border-radius: 20px;
+    opacity: 0.85;
+  }
+
+  /* ---------- Reasons ---------- */
+  .reasons-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+  }
+  .reason-card{
+    background: var(--paper);
+    border: 1px solid var(--gold-light);
+    border-radius: 6px;
+    padding: 26px 22px;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 14px 30px -18px rgba(62,36,48,0.2);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .reason-card:hover{
+    transform: translateY(-6px);
+    box-shadow: 0 22px 40px -18px rgba(62,36,48,0.3);
+  }
+  .reason-index{
+    font-family: 'Dancing Script', cursive;
+    color: var(--gold);
+    font-size: 1.6rem;
+  }
+  .reason-text{
+    font-size: 0.98rem;
+    line-height: 1.6;
+  }
+
+  /* ---------- Timeline ---------- */
+  .timeline{
+    position: relative;
+    padding-left: 34px;
+  }
+  .timeline::before{
+    content: "";
+    position: absolute;
+    left: 6px; top: 6px; bottom: 6px;
+    width: 1px;
+    background: linear-gradient(var(--gold), var(--rose));
+  }
+  .timeline-item{
+    position: relative;
+    margin-bottom: 46px;
+  }
+  .timeline-item:last-child{ margin-bottom: 0; }
+  .timeline-item::before{
+    content: "";
+    position: absolute;
+    left: -34px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--rose);
+    border: 2px solid var(--gold-light);
+  }
+  .timeline-date{
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--rose);
+    margin-bottom: 6px;
+  }
+  .timeline-title{
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+  }
+  .timeline-text{
+    font-size: 0.95rem;
+    line-height: 1.7;
+    opacity: 0.85;
+  }
+
+  /* ---------- Gallery ---------- */
+  .gallery-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 18px;
+  }
+  .frame{
+    aspect-ratio: 4/5;
+    background: var(--paper);
+    border: 1px solid var(--gold-light);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 14px;
+    box-shadow: 0 12px 24px -16px rgba(62,36,48,0.25);
+    position: relative;
+  }
+  .frame::before, .frame::after{
+    content:"";
+    position:absolute;
+    width: 16px; height: 16px;
+    border: 1px solid var(--gold);
+    opacity: 0.5;
+  }
+  .frame::before{ top:8px; left:8px; border-right:none; border-bottom:none; }
+  .frame::after{ bottom:8px; right:8px; border-left:none; border-top:none; }
+  .frame-label{
+    font-size: 0.8rem;
+    color: var(--rose);
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .frame img, .frame video{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 3px;
+    display: block;
+  }
+
+  /* ---------- Music ---------- */
+  .music-panel{
+    background: linear-gradient(135deg, var(--plum), #563243);
+    color: var(--cream);
+    border-radius: 10px;
+    padding: 40px clamp(24px, 6vw, 50px);
+    text-align: center;
+    box-shadow: 0 30px 60px -30px rgba(62,36,48,0.5);
+  }
+  .music-panel .section-label{ color: var(--gold-light); }
+  .music-title{
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+  }
+  .music-sub{
+    font-size: 0.85rem;
+    opacity: 0.75;
+    margin-bottom: 28px;
+  }
+  .player{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+  #play-btn{
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    border: 1px solid var(--gold-light);
+    background: transparent;
+    color: var(--cream);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+  }
+  #play-btn:hover{ background: rgba(230,205,138,0.15); }
+  .bars{
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 26px;
+  }
+  .bar{
+    width: 3px;
+    background: var(--gold-light);
+    animation: eq 1.1s ease-in-out infinite;
+    opacity: 0.5;
+  }
+  .bar:nth-child(1){ animation-delay: 0s; }
+  .bar:nth-child(2){ animation-delay: 0.15s; }
+  .bar:nth-child(3){ animation-delay: 0.3s; }
+  .bar:nth-child(4){ animation-delay: 0.45s; }
+  .bar:nth-child(5){ animation-delay: 0.6s; }
+  @keyframes eq{
+    0%, 100%{ height: 6px; }
+    50%{ height: 24px; }
+  }
+  .bars.playing .bar{ opacity: 1; }
+  .bars:not(.playing) .bar{ animation-play-state: paused; height: 6px; }
+
+  .music-note{
+    margin-top: 24px;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    line-height: 1.6;
+  }
+
+  /* ---------- Closing ---------- */
+  .closing{
+    text-align: center;
+    padding-bottom: 140px;
+  }
+  .closing-heart{
+    font-size: 2.6rem;
+    color: var(--rose);
+    margin-bottom: 20px;
+  }
+  .closing-text{
+    font-size: 1.3rem;
+    line-height: 1.8;
+    max-width: 520px;
+    margin: 0 auto 26px;
+  }
+  .closing-sign{
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.4rem;
+    color: var(--rose);
+  }
+
+  .fade-in{
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .fade-in.visible{
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+    .fade-in{ opacity: 1; transform: none; }
+  }
+
+  button:focus-visible, .envelope-wrap:focus-visible{
+    outline: 2px solid var(--rose);
+    outline-offset: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div id="petal-field"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="eyebrow">International Girlfriends Day</div>
+  <div class="envelope-wrap" id="envelope" role="button" tabindex="0" aria-label="Open the envelope">
+    <div class="letter-peek">A little something for you, Samantha</div>
+    <div class="envelope-body"></div>
+    <div class="envelope-flap"></div>
+    <div class="seal">S</div>
+  </div>
+  <div class="hero-hint">tap the envelope</div>
+  <div class="scroll-cue">scroll ↓</div>
+</section>
+
+<!-- LETTER -->
+<section id="letter">
+  <div class="section-label fade-in">A Letter For You</div>
+  <h2 class="section-title fade-in">Dear Samantha,</h2>
+  <div class="letter-card fade-in">
+    <div class="letter-body">
+      <p>I wanted today to be about you — not because you need a special day to be celebrated, but because I like any excuse to tell you how much you mean to me.</p>
+      <p>You have this way of making ordinary days feel like they matter. A quiet Tuesday, a long car ride, doing nothing in particular — somehow it's better because you're the one next to me. I don't take that for granted.</p>
+      <p>Thank you for your patience, your laugh that I can pick out of any room, and the way you show up for the people you love without being asked. I hope today you feel exactly as cherished as you make me feel every day.</p>
+      <p>Here's to us, and to many more ordinary days that don't feel ordinary at all.</p>
+    </div>
+    <div class="letter-signoff">Yours, always</div>
+    <div style="text-align:center;"><span class="editable-note">✎ replace this letter with your own words</span></div>
+  </div>
+</section>
+
+<!-- REASONS -->
+<section id="reasons">
+  <div class="section-label fade-in">Just a Few of the Reasons</div>
+  <h2 class="section-title fade-in">Why I Love You</h2>
+  <div class="reasons-grid fade-in">
+    <div class="reason-card"><div class="reason-index">01</div><div class="reason-text">The way you laugh at your own jokes before you finish telling them.</div></div>
+    <div class="reason-card"><div class="reason-index">02</div><div class="reason-text">How you remember the small things I mention once, weeks later.</div></div>
+    <div class="reason-card"><div class="reason-index">03</div><div class="reason-text">You make everyone around you feel like they belong.</div></div>
+    <div class="reason-card"><div class="reason-index">04</div><div class="reason-text">Your unwavering opinions about food, movies, and everything in between.</div></div>
+    <div class="reason-card"><div class="reason-index">05</div><div class="reason-text">The way you fight for the people and things you care about.</div></div>
+    <div class="reason-card"><div class="reason-index">06</div><div class="reason-text">You still get excited about the little things, and it's contagious.</div></div>
+  </div>
+  <div style="text-align:center; margin-top:22px;"><span class="editable-note fade-in">✎ swap these six for your own reasons</span></div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline">
+  <div class="section-label fade-in">Our Story So Far</div>
+  <h2 class="section-title fade-in">A Little Timeline</h2>
+  <div class="timeline fade-in">
+    <div class="timeline-item">
+      <div class="timeline-date">Chapter One</div>
+      <div class="timeline-title">The Day We Met</div>
+      <div class="timeline-text">Replace this with how it happened — where you were, what you noticed first.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">Chapter Two</div>
+      <div class="timeline-title">The First Date</div>
+      <div class="timeline-text">Replace this with the details you still remember, even the small ones.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">Chapter Three</div>
+      <div class="timeline-title">Making It Official</div>
+      <div class="timeline-text">Replace this with the moment you knew you wanted this to be real.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">Today</div>
+      <div class="timeline-title">Still Choosing You</div>
+      <div class="timeline-text">Replace this with where you are now, and what you're looking forward to.</div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="section-label fade-in">Some Favorites</div>
+  <h2 class="section-title fade-in">Our Moments</h2>
+  <div class="gallery-grid fade-in">
+    <div class="frame"><img src="photo-1.jpg" alt="Samantha"></div>
+    <div class="frame"><img src="photo-2.jpg" alt="Us together"></div>
+    <div class="frame"><img src="photo-3.jpg" alt="Us together"></div>
+    <div class="frame"><img src="photo-4.jpg" alt="Samantha"></div>
+    <div class="frame"><video src="video-1.mp4" controls playsinline></video></div>
+    <div class="frame"><video src="video-2.mp4" controls playsinline></video></div>
+  </div>
+  <div style="text-align:center; margin-top:22px;"><span class="editable-note fade-in">✎ add more photos anytime — see the note at the end of this file</span></div>
+</section>
+
+<!-- MUSIC -->
+<section id="music">
+  <div class="music-panel fade-in">
+    <div class="section-label">Press Play</div>
+    <div class="music-title">Our Song</div>
+    <div class="music-sub">Replace the audio file to make this the song that's "ours"</div>
+    <div class="player">
+      <button id="play-btn" aria-label="Play our song">▶</button>
+      <div class="bars" id="bars">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      </div>
+    </div>
+    <audio id="audio" src="our-song.mp3" preload="none"></audio>
+    <div class="music-note">✎ add a file named "our-song.mp3" next to this page to make the player work — see the note at the end of this file</div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing">
+  <div class="closing-heart fade-in">♥</div>
+  <div class="closing-text fade-in">Happy International Girlfriends Day, Samantha. Thank you for choosing me, every day, in all the ordinary and extraordinary ways.</div>
+  <div class="closing-sign fade-in">Made with love, just for you</div>
+</section>
+
+<script>
+  // Envelope open interaction
+  const envelope = document.getElementById('envelope');
+  function openEnvelope(){
+    envelope.classList.add('open');
+    setTimeout(() => {
+      document.getElementById('letter').scrollIntoView({behavior:'smooth'});
+    }, 900);
+  }
+  envelope.addEventListener('click', openEnvelope);
+  envelope.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openEnvelope(); }
+  });
+
+  // Floating petals
+  const field = document.getElementById('petal-field');
+  const petalCount = window.innerWidth < 600 ? 12 : 22;
+  for(let i = 0; i < petalCount; i++){
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (10 + Math.random() * 12) + 's';
+    p.style.animationDelay = (Math.random() * 12) + 's';
+    p.style.opacity = 0.4 + Math.random() * 0.4;
+    const scale = 0.6 + Math.random() * 0.8;
+    p.style.transform = `scale(${scale})`;
+    field.appendChild(p);
+  }
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+
+  // Music player
+  const audio = document.getElementById('audio');
+  const playBtn = document.getElementById('play-btn');
+  const bars = document.getElementById('bars');
+  let playing = false;
+  playBtn.addEventListener('click', () => {
+    if(!playing){
+      audio.play().catch(() => {
+        alert('Add a file named "our-song.mp3" next to this page to hear your song here.');
+      });
+      playBtn.textContent = '❚❚';
+      bars.classList.add('playing');
+      playing = true;
+    } else {
+      audio.pause();
+      playBtn.textContent = '▶';
+      bars.classList.remove('playing');
+      playing = false;
+    }
+  });
+  audio.addEventListener('ended', () => {
+    playBtn.textContent = '▶';
+    bars.classList.remove('playing');
+    playing = false;
+  });
+</script>
+
+<!--
+  HOW TO PERSONALIZE THIS PAGE
+
+  1. Photos & videos: the gallery already uses photo-1.jpg through
+     photo-4.jpg and video-1.mp4 / video-2.mp4. To add more, copy a
+     <div class="frame"><img src="photo-5.jpg" alt="..."></div> block
+     (or a <video> version) into the gallery-grid, and make sure the
+     file with that exact name sits in the same folder as this page.
+
+  2. Music: place an mp3 file named "our-song.mp3" in the same folder as
+     this HTML file, or edit the src="our-song.mp3" in the <audio> tag
+     to match your file's name.
+
+  3. Text: search for the ✎ notes above — the letter, the six reasons,
+     and the four timeline chapters are all placeholders written to be
+     personalized with your own story.
+-->
+
+</body>
+</html>
